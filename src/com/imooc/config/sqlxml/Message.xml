@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.imooc.dao.IMessage">
+
+  <resultMap type="com.imooc.bean.Message" id="MessageResult">
+    <id column="ID" jdbcType="INTEGER" property="id"/>
+    <result column="COMMAND" jdbcType="VARCHAR" property="command"/>
+    <result column="CONTENT" jdbcType="VARCHAR" property="content"/>
+    <result column="DESCRIPTION" jdbcType="VARCHAR" property="description"/>
+  </resultMap>
+
+  <select id="queryMessageList" parameterType="java.util.Map" resultMap="MessageResult">
+    	select ID,COMMAND,DESCRIPTION,CONTENT from message WHERE 1=1 
+    	<if test="message.command != null &amp;&amp; !&quot;&quot;.equals(message.command.trim())">
+    		and command = #{message.command}
+    	</if>
+    	<if test="message.description != null and message.description.trim() != '' ">
+    		and description like '%' #{message.description} '%'
+    	</if>
+    	order by id limit #{page.dbIndex},#{page.dbNumber}
+  </select>
+  <select id="queryMessageListByPage" parameterType="java.util.Map" resultMap="MessageResult">
+    	select ID,COMMAND,DESCRIPTION,CONTENT from message WHERE 1=1 
+    	<if test="message.command != null &amp;&amp; !&quot;&quot;.equals(message.command.trim())">
+    		and command = #{message.command}
+    	</if>
+    	<if test="message.description != null and message.description.trim() != '' ">
+    		and description like '%' #{message.description} '%'
+    	</if>
+    	order by id 
+  </select>
+  <delete id="deleteOne" parameterType="int">
+  		delete from message where id = #{_parameter}
+  </delete>
+  <delete id="deleteBatch" parameterType="list">
+  		delete from message where id in (
+		<foreach collection="list" item="item" separator="," >
+			#{item}	
+		</foreach>  		
+		)
+  </delete>
+  <select id="count" parameterType="com.imooc.dao.IMessage" resultType="int">
+  	select count(*) from message 
+  	<where>
+  		<if test="command != null &amp;&amp; !&quot;&quot;.equals(command.trim())">
+    		and command = #{command}
+    	</if>
+    	<if test="description != null and description.trim() != '' ">
+    		and description like '%' #{description} '%'
+    	</if>
+  	</where>
+  </select>
+</mapper>
+
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper>
+  <resultMap type="com.imooc.bean.CommandContent" id="Content">
+    <id column="ID" jdbcType="INTEGER" property="id"/>
+    <result column="CONTENT" jdbcType="VARCHAR" property="content"/>
+    <result column="COMMAND_ID" jdbcType="VARCHAR" property="commandId"/>
+  </resultMap>
+  <insert id="insertBatch" parameterType="java.util.List" >
+  	insert into command_content (content,command_id) values 
+  	<foreach collection="list" item="item" separator=",">
+  		(#{item.content},#{item.commandId})
+  	</foreach>
+  </insert>
+</mapper>
